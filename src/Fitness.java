@@ -5,40 +5,41 @@ public class Fitness {
 
 
     // ONE-MAX
-    /*
-    static public int eval_fitness(Genome g){
-        int score = 0;
-        int[] dna = g.getDna();
-        for (int i=0; i<dna.length; i++){
-            if (dna[i]==1) score+=1;
-        }
-        return score;
-    }
-*/
 
-    // LOLZ
+    static int problem =0;
 
     static public int eval_fitness(Genome g){
-        int zero_cap = 4;
-        int score = 0;
-        int[] dna = g.getDna();
-        int last = dna[0];
-        int target = dna[0];
-        for (int i=0; i<dna.length; i++){
-            if (dna[i]==last){
-                score+=1;
-                last=dna[i];
+        if (problem==0){
+            int score = 0;
+            int[] dna = g.getDna();
+            for (int i=0; i<dna.length; i++){
+                if (dna[i]==1) score+=1;
             }
-            else{
-                break;
+            return score;
+        }
+        else if (problem==1) {
+            int zero_cap = 4;
+            int score = 0;
+            int[] dna = g.getDna();
+            int last = dna[0];
+            int target = dna[0];
+            for (int i = 0; i < dna.length; i++) {
+                if (dna[i] == last) {
+                    score += 1;
+                    last = dna[i];
+                } else {
+                    break;
+                }
             }
+            if (target == 0) {
+                if (score >= zero_cap) return zero_cap;
+                else return score;
+            }
+            return score;
         }
-        if (target==0){
-            if (score>=zero_cap)return zero_cap;
-            else return score;
+        else if (problem==2){
+
         }
-        return score;
+        return -1;
     }
-
-
 }

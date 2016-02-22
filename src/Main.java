@@ -11,20 +11,19 @@ public class Main {
     static Genome best_genome;
 
     //Params:
-    static int genome_length = 100;
-    static int num_children  = 10;
-    static int num_parents   = 8;
-    static int generations   = 0;
+    static int genome_length   = 70;
+    static int num_children    = 100;
+    static int num_parents     = 100;
+    static int percentage_best = 50;
+    static int generations     = 1000;
 
 
     public static void main(String[] args) {
         children_genomes = generate_children(num_children);
-        System.out.println("Children Genomes");
+        System.out.println("First generation");
         print_fitness_stats(children_genomes);
         adult_genomes = select_adults(children_genomes);
         parent_genomes = select_parents(adult_genomes);
-        System.out.println("Parent Genomes");
-        print_fitness_stats(parent_genomes);
         new_generation = reproduction(parent_genomes);
         System.out.println("New generation");
         print_fitness_stats(new_generation);
@@ -32,16 +31,15 @@ public class Main {
         int c = 0;
         int target_fitness = genome_length;
         best_genome = parent_genomes.get(0);
-        while(target_fitness > Fitness.eval_fitness(best_genome)){
+        while(target_fitness > Fitness.eval_fitness(best_genome) &&(c<generations) ){
 
             c++;
+            System.out.println(" New children pool size: "+new_generation.size());
             children_genomes = new_generation;
-            System.out.println("Children Genomes");
-            print_fitness_stats(children_genomes);
             adult_genomes = select_adults(children_genomes);
+            System.out.println(" New adult size: "+adult_genomes.size());
             parent_genomes = select_parents(adult_genomes);
-            System.out.println("Parent Genomes");
-            print_fitness_stats(parent_genomes);
+            System.out.println(" New parent size: "+parent_genomes.size());
             new_generation = reproduction(parent_genomes);
             System.out.println("New generation");
             print_fitness_stats(new_generation);
@@ -121,14 +119,20 @@ public class Main {
     }
 
     private static ArrayList<Genome> select_parents(ArrayList<Genome> adults){
+        int best_count = (num_parents*percentage_best)/100;
+        int worst_count = num_children-best_count;
         Random rnd = new Random();
         ArrayList<Genome> sorted_adults = sort_genomes(adults);
-        ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size()-num_parents-2),sorted_adults.size()));
-        ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0,(sorted_adults.size()-num_parents-1)));
+
+
+        ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size()-best_count),sorted_adults.size()));
+        ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0,(sorted_adults.size()-best_count)));
+
         ArrayList<Genome> selected_adults = new ArrayList<>(best_adults);
 
-        selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
-        selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+        for (int i=0; i<(worst_count); i++){
+            selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+        }
         return selected_adults;
     }
 

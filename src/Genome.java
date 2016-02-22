@@ -13,8 +13,8 @@ public class Genome {
         Random rnd = new Random();
 
         this.dna = new int[length];
-        for (int i =0; i<length; i++)dna[i]=rnd.nextInt(2);
-        //for (int i =0; i<length; i++)dna[i]=0;
+        //for (int i =0; i<length; i++)dna[i]=rnd.nextInt(2);
+        for (int i =0; i<length; i++)dna[i]=0;
     }
 
     public Genome(int[] dna){
