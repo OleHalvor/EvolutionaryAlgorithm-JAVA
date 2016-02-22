@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 public class Main {
 
@@ -9,7 +10,7 @@ public class Main {
     static ArrayList<Genome> new_generation = new ArrayList<>();
 
     //Params:
-    static int genome_length=20;
+    static int genome_length=1000;
     static int num_children = 10;
     static int num_parents = 8;
     static int generations = 0;
@@ -27,7 +28,9 @@ public class Main {
         System.out.println("New generation");
         print_fitness_stats(new_generation);
 
+        int c = 0;
         while(true){
+            c++;
             children_genomes = new_generation;
             System.out.println("Children Genomes");
             print_fitness_stats(children_genomes);
@@ -38,11 +41,24 @@ public class Main {
             new_generation = reproduction(parent_genomes);
             System.out.println("New generation");
             print_fitness_stats(new_generation);
+            if (c<10)
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            else if (c<100)
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            else if (c<1000)
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
@@ -99,8 +115,15 @@ public class Main {
     }
 
     private static ArrayList<Genome> select_parents(ArrayList<Genome> adults){
+        Random rnd = new Random();
         ArrayList<Genome> sorted_adults = sort_genomes(adults);
-        return new ArrayList<Genome>(sorted_adults.subList((sorted_adults.size()-num_parents),sorted_adults.size()));
+        ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size()-num_parents-2),sorted_adults.size()));
+        ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0,(sorted_adults.size()-num_parents-1)));
+        ArrayList<Genome> selected_adults = new ArrayList<>(best_adults);
+
+        selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+        selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+        return selected_adults;
     }
 
     private static ArrayList<Genome> generate_children(int size){

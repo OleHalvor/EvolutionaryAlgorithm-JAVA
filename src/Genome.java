@@ -33,9 +33,16 @@ public class Genome {
         int[] dna1 = g.getDna();
         int[] new_dna = new int[dna0.length];
         for (int i=0; i<dna0.length; i++){
-            int rand = rnd.nextInt(2);
-            if (rand==0)new_dna[i]=dna0[i];
-            else new_dna[i]=dna1[i];
+            int rand0 = rnd.nextInt(10000);
+            if (rand0 >= 9995){
+                new_dna[i]=rnd.nextInt(2);
+            }
+
+            else {
+                int rand = rnd.nextInt(2);
+                if (rand == 0) new_dna[i] = dna0[i];
+                else new_dna[i] = dna1[i];
+            }
         }
         return new Genome(new_dna);
     }
