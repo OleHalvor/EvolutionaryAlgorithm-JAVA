@@ -46,4 +46,12 @@ public class Genome {
         }
         return new Genome(new_dna);
     }
+
+    public static String printDna(Genome g){
+        String dna="";
+        for (int i:g.dna){
+            dna+=i+", ";
+        }
+        return dna;
+    }
 }

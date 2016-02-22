@@ -10,10 +10,10 @@ public class Main {
     static ArrayList<Genome> new_generation = new ArrayList<>();
 
     //Params:
-    static int genome_length=1000;
-    static int num_children = 10;
-    static int num_parents = 8;
-    static int generations = 0;
+    static int genome_length = 40;
+    static int num_children  = 10;
+    static int num_parents   = 8;
+    static int generations   = 0;
 
 
     public static void main(String[] args) {
@@ -77,8 +77,13 @@ public class Main {
     private static void print_fitness_stats(ArrayList<Genome> genes){
         System.out.println("----------------------");
 
+        Genome max_genome = genes.get(0);
         int max = 0;
-        for ( Genome g:genes)if(Fitness.eval_fitness(g)>max)max = Fitness.eval_fitness(g);
+        for ( Genome g:genes)if(Fitness.eval_fitness(g)>max){
+            max = Fitness.eval_fitness(g);
+            max_genome = g;
+        }
+        System.out.println("Best genome: "+Genome.printDna(max_genome));
         System.out.println("Max Fitness: "+max);
 
         int tot =0;
