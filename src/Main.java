@@ -8,9 +8,10 @@ public class Main {
     static ArrayList<Genome> adult_genomes = new ArrayList<>();
     static ArrayList<Genome> parent_genomes = new ArrayList<>();
     static ArrayList<Genome> new_generation = new ArrayList<>();
+    static Genome best_genome;
 
     //Params:
-    static int genome_length = 40;
+    static int genome_length = 100;
     static int num_children  = 10;
     static int num_parents   = 8;
     static int generations   = 0;
@@ -29,7 +30,10 @@ public class Main {
         print_fitness_stats(new_generation);
 
         int c = 0;
-        while(true){
+        int target_fitness = genome_length;
+        best_genome = parent_genomes.get(0);
+        while(target_fitness > Fitness.eval_fitness(best_genome)){
+
             c++;
             children_genomes = new_generation;
             System.out.println("Children Genomes");
@@ -53,12 +57,6 @@ public class Main {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            else if (c<1000)
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
         }
     }
 
@@ -75,6 +73,8 @@ public class Main {
     }
 
     private static void print_fitness_stats(ArrayList<Genome> genes){
+
+        // THIS ALSO SETS BEST GENOME
         System.out.println("----------------------");
 
         Genome max_genome = genes.get(0);
@@ -83,6 +83,7 @@ public class Main {
             max = Fitness.eval_fitness(g);
             max_genome = g;
         }
+        best_genome = max_genome;
         System.out.println("Best genome: "+Genome.printDna(max_genome));
         System.out.println("Max Fitness: "+max);
 

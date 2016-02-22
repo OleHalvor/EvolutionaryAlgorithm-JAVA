@@ -3,6 +3,9 @@
  */
 public class Fitness {
 
+
+    // ONE-MAX
+    /*
     static public int eval_fitness(Genome g){
         int score = 0;
         int[] dna = g.getDna();
@@ -11,10 +14,30 @@ public class Fitness {
         }
         return score;
     }
+*/
 
-    static public int eval_fitness(Phenome p){
-        int dna = p.getDna();
-        return dna;
+    // LOLZ
+
+    static public int eval_fitness(Genome g){
+        int zero_cap = 4;
+        int score = 0;
+        int[] dna = g.getDna();
+        int last = dna[0];
+        int target = dna[0];
+        for (int i=0; i<dna.length; i++){
+            if (dna[i]==last){
+                score+=1;
+                last=dna[i];
+            }
+            else{
+                break;
+            }
+        }
+        if (target==0){
+            if (score>=zero_cap)return zero_cap;
+            else return score;
+        }
+        return score;
     }
 
 
