@@ -17,20 +17,49 @@ public class Main {
 
     public static void main(String[] args) {
         children_genomes = generate_children(num_children);
+        System.out.println("Children Genomes");
         print_fitness_stats(children_genomes);
         adult_genomes = select_adults(children_genomes);
-        print_fitness_stats(adult_genomes);
         parent_genomes = select_parents(adult_genomes);
+        System.out.println("Parent Genomes");
         print_fitness_stats(parent_genomes);
+        new_generation = reproduction(parent_genomes);
+        System.out.println("New generation");
+        print_fitness_stats(new_generation);
 
-
+        while(true){
+            children_genomes = new_generation;
+            System.out.println("Children Genomes");
+            print_fitness_stats(children_genomes);
+            adult_genomes = select_adults(children_genomes);
+            parent_genomes = select_parents(adult_genomes);
+            System.out.println("Parent Genomes");
+            print_fitness_stats(parent_genomes);
+            new_generation = reproduction(parent_genomes);
+            System.out.println("New generation");
+            print_fitness_stats(new_generation);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    private static void adult_reproduction(Genome g0, Genome g1, int num_offspring){
+    private static ArrayList<Genome> reproduction(ArrayList<Genome> parents){
+        ArrayList<Genome> offspring = new ArrayList<>();
+        for (Genome p1:parents){
+            for (Genome p2:parents){
+                if (!p2.equals(p1)){
+                    offspring.add(p1.crossover(p2));
+                }
+            }
+        }
+        return offspring;
     }
 
     private static void print_fitness_stats(ArrayList<Genome> genes){
-        System.out.println("");
+        System.out.println("----------------------");
 
         int max = 0;
         for ( Genome g:genes)if(Fitness.eval_fitness(g)>max)max = Fitness.eval_fitness(g);
@@ -45,7 +74,7 @@ public class Main {
         for ( Genome g:genes)if(Fitness.eval_fitness(g)<min)min = Fitness.eval_fitness(g);
         System.out.println("Min Fitness: "+min);
 
-        System.out.println("");
+        System.out.println("----------------------");
     }
 
     private static ArrayList<Genome> sort_genomes(ArrayList<Genome> old_list){
@@ -71,7 +100,7 @@ public class Main {
 
     private static ArrayList<Genome> select_parents(ArrayList<Genome> adults){
         ArrayList<Genome> sorted_adults = sort_genomes(adults);
-        return new ArrayList<Genome>(sorted_adults.subList((sorted_adults.size()-num_parents-1),sorted_adults.size()-1));
+        return new ArrayList<Genome>(sorted_adults.subList((sorted_adults.size()-num_parents),sorted_adults.size()));
     }
 
     private static ArrayList<Genome> generate_children(int size){
