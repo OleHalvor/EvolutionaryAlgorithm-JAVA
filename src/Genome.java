@@ -22,7 +22,7 @@ public class Genome {
         return dna;
     }
 
-    public Genome crossover(Genome){
+    public Genome crossover(Genome g){
         //Crossover genes with another
         return this;
     }
