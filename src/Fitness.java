@@ -6,7 +6,8 @@ public class Fitness {
 
     // ONE-MAX
 
-    static int problem =0;
+
+    static int problem =1;
 
     static public int eval_fitness(Genome g){
         if (problem==0){
@@ -18,7 +19,7 @@ public class Fitness {
             return score;
         }
         else if (problem==1) {
-            int zero_cap = 4;
+            int zero_cap = 21;
             int score = 0;
             int[] dna = g.getDna();
             int last = dna[0];

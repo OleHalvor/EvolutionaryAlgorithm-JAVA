@@ -11,14 +11,20 @@ public class Main {
     static Genome best_genome;
 
     //Params:
-    static int genome_length   = 70;
+    static int genome_length   = 40;
     static int num_children    = 100;
     static int num_parents     = 100;
     static int percentage_best = 50;
     static int generations     = 1000;
+    static int mutation_rate   = 1;
+    static int last_fitness     = 0;
 
+    public static int get_mutation_rate(){
+        return mutation_rate;
+    }
 
     public static void main(String[] args) {
+        new_generation = generate_children(num_children);
         children_genomes = generate_children(num_children);
         System.out.println("First generation");
         print_fitness_stats(children_genomes);
@@ -31,7 +37,21 @@ public class Main {
         int c = 0;
         int target_fitness = genome_length;
         best_genome = parent_genomes.get(0);
-        while(target_fitness > Fitness.eval_fitness(best_genome) &&(c<generations) ){
+        mutation_rate = 1;
+        last_fitness = 0;
+        while(target_fitness > Fitness.eval_fitness(best_genome) &&(c<generations) ) {
+
+            if (last_fitness >= Fitness.eval_fitness(get_best_genome(new_generation))){
+                mutation_rate++;
+                System.out.println("max, Fitn"+ last_fitness +" ,"+Fitness.eval_fitness(get_best_genome(new_generation)));
+                last_fitness = Fitness.eval_fitness(get_best_genome(new_generation));
+            }
+            else{
+                mutation_rate = 1;
+                last_fitness = Fitness.eval_fitness(get_best_genome(new_generation));
+            }
+
+            System.out.println("mutation rate: "+mutation_rate);
 
             c++;
             System.out.println(" New children pool size: "+new_generation.size());
@@ -45,13 +65,13 @@ public class Main {
             print_fitness_stats(new_generation);
             if (c<10)
             try {
-                Thread.sleep(2000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             else if (c<100)
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -68,6 +88,17 @@ public class Main {
             }
         }
         return offspring;
+    }
+
+    private static Genome get_best_genome(ArrayList<Genome> genes){
+        Genome max_genome = genes.get(0);
+        int max = 0;
+        for ( Genome g:genes)if(Fitness.eval_fitness(g)>max){
+            max = Fitness.eval_fitness(g);
+            max_genome = g;
+        }
+        best_genome = max_genome;
+        return best_genome;
     }
 
     private static void print_fitness_stats(ArrayList<Genome> genes){
@@ -132,6 +163,13 @@ public class Main {
 
         for (int i=0; i<(worst_count); i++){
             selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+        }
+        if (parent_genomes.size()>=1) {
+            ArrayList<Genome> sorted_parents = sort_genomes(parent_genomes);
+            selected_adults.add(sorted_parents.get(sorted_parents.size() - 1));
+            selected_adults.add(sorted_parents.get(sorted_parents.size() - 2));
+            selected_adults.add(sorted_parents.get(0));
+            selected_adults.add(sorted_parents.get(1));
         }
         return selected_adults;
     }
