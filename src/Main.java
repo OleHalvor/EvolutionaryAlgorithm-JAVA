@@ -21,8 +21,10 @@ public class Main {
 
     //Problem specific
     static int adult_selection = 1; //0:full, 1:over-production, 2:mixing
-    static int problem = 0; //0:OneMax, 1:LOLZ, 2:Surprising sequences
+    static int problem = 1; //0:OneMax, 1:LOLZ, 2:Surprising sequences
     static int parent_selection = 0; //0: fitness-proportionate, 1:sigma-scaling, 2:turnament-selection, 3:Min
+
+
 
     public static int get_mutation_rate(){
         return mutation_rate;
@@ -156,22 +158,25 @@ public class Main {
             return children;
         if (adult_selection==1){
             ArrayList<Genome> sorted_adults = sort_genomes(children);
-            int best_count = (num_parents * percentage_best) / 100;
-            int worst_count = num_children - best_count;
-            ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size() - best_count), sorted_adults.size()));
-            ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0, (sorted_adults.size() - best_count)));
-            ArrayList<Genome> selected_adults = new ArrayList<>(best_adults);
-            for (int i = 0; i < (worst_count); i++) {
-                selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+            if (sorted_adults.size()>num_parents) {
+                int best_count = (num_parents * percentage_best) / 100;
+                int worst_count = num_children - best_count;
+                ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size() - best_count), sorted_adults.size()));
+                ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0, (sorted_adults.size() - best_count)));
+                ArrayList<Genome> selected_adults = new ArrayList<>(best_adults);
+                for (int i = 0; i < (worst_count); i++) {
+                    selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+                }
+                if (parent_genomes.size() >= 2) {
+                    ArrayList<Genome> sorted_parents = sort_genomes(parent_genomes);
+                    selected_adults.add(sorted_parents.get(sorted_parents.size() - 1));
+                    selected_adults.add(sorted_parents.get(sorted_parents.size() - 2));
+                    selected_adults.add(sorted_parents.get(0));
+                    selected_adults.add(sorted_parents.get(1));
+                }
+                return selected_adults;
             }
-            if (parent_genomes.size() >= 2) {
-                ArrayList<Genome> sorted_parents = sort_genomes(parent_genomes);
-                selected_adults.add(sorted_parents.get(sorted_parents.size() - 1));
-                selected_adults.add(sorted_parents.get(sorted_parents.size() - 2));
-                selected_adults.add(sorted_parents.get(0));
-                selected_adults.add(sorted_parents.get(1));
-            }
-            return selected_adults;
+            return children;
         }
         if (adult_selection==2){
             ArrayList<Genome> temp = new ArrayList<>(children);
@@ -222,6 +227,39 @@ public class Main {
 
         }
         if (parent_selection==1){
+            //sigma scaling
+            double avg_fitness = 0;
+            double fit_deviation = 0;
+            for (Genome g:adults){
+                avg_fitness+=Fitness.eval_fitness(g);
+            }
+            avg_fitness = avg_fitness/adults.size();
+            for (Genome g:adults){
+                fit_deviation+= Math.pow(Fitness.eval_fitness(g)-avg_fitness,2);
+            }
+            fit_deviation= Math.sqrt(fit_deviation/adults.size());
+            ArrayList<Individual> individuals = new ArrayList<>();
+            double last_value = 0;
+            for (Genome g:adults){
+                Individual i = new Individual(g,Fitness.eval_fitness(g));
+                double sigma_value = 1+( ((double)Fitness.eval_fitness(g)-avg_fitness ) /(2*fit_deviation)  );
+                i.setPropFitStart(last_value);
+                i.setPropFit(sigma_value+last_value);
+                last_value += sigma_value;
+                System.out.println("Sigma value: "+sigma_value);
+                individuals.add(i);
+            }
+            ArrayList<Genome> winners = new ArrayList<>();
+            for (int i=0; i<num_parents; i++){
+                double rnd_num = rnd.nextDouble();
+                for (Individual k:individuals){
+                    if ((rnd_num>k.getPropFitStart())&&(rnd_num<k.getPropFit())){
+                        if (!winners.contains(k.genome))winners.add(k.getGenome());
+                    }
+                }
+            }
+        return winners;
+
 
         }
         if (parent_selection==2){
@@ -250,6 +288,7 @@ public class Main {
         return adults;
     }
 
+
     private static ArrayList<Genome> generate_children(int size){
         ArrayList<Genome> genomes = new ArrayList<>();
         for (int i=0; i<size; i++){
@@ -265,5 +304,45 @@ public class Main {
             phenomes.add(new Phenome(Fitness.eval_fitness(g)));
         }
         return phenomes;
+    }
+
+    public static int getParent_selection() {
+        return parent_selection;
+    }
+
+    public static void setParent_selection(int parent_selection) {
+        Main.parent_selection = parent_selection;
+    }
+
+    public static int getProblem() {
+        return problem;
+    }
+
+    public static void setProblem(int problem) {
+        Main.problem = problem;
+    }
+
+    public static int getAdult_selection() {
+        return adult_selection;
+    }
+
+    public static void setAdult_selection(int adult_selection) {
+        Main.adult_selection = adult_selection;
+    }
+
+    public static int getNum_parents() {
+        return num_parents;
+    }
+
+    public static void setNum_parents(int num_parents) {
+        Main.num_parents = num_parents;
+    }
+
+    public static int getGenome_length() {
+        return genome_length;
+    }
+
+    public static void setGenome_length(int genome_length) {
+        Main.genome_length = genome_length;
     }
 }
