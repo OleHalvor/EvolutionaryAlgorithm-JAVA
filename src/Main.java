@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
-public class Main {
+public class Main extends Thread{
 
     static ArrayList<Genome> children_genomes = new ArrayList<>();
     static ArrayList<Genome> adult_genomes = new ArrayList<>();
@@ -29,8 +29,13 @@ public class Main {
     public static int get_mutation_rate(){
         return mutation_rate;
     }
-
+    public void run(){
+        main(null);
+    }
     public static void main(String[] args) {
+        System.out.println("  ");
+        System.out.println("-----------Starting--------------");
+
         new_generation = generate_children(num_children);
         children_genomes = generate_children(num_children);
         System.out.println("First generation");
@@ -83,6 +88,7 @@ public class Main {
                     e.printStackTrace();
                 }
         }
+        System.out.println("----------DONE----------");
     }
 
     private static ArrayList<Genome> reproduction(ArrayList<Genome> parents){

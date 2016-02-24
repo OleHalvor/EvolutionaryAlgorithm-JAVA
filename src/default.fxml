@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -16,6 +19,78 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button fx:id="btnStart" mnemonicParsing="false" text="Start sim" />
+      <Button fx:id="btnStart" mnemonicParsing="false" prefHeight="136.0" prefWidth="300.0" text="Start sim" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <CheckBox fx:id="chkOneMax" mnemonicParsing="false" text="One-Max" GridPane.rowIndex="1" />
+            <CheckBox fx:id="chkLolz" mnemonicParsing="false" selected="true" text="LOLZ" GridPane.rowIndex="2" />
+            <CheckBox fx:id="chkSurprising" mnemonicParsing="false" text="Surprising Sequences" GridPane.rowIndex="3" />
+            <Label text="Problem:" />
+         </children>
+      </GridPane>
+      <GridPane GridPane.rowIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Adult Selection" />
+            <CheckBox fx:id="chkAdultFull" mnemonicParsing="false" text="Full" GridPane.rowIndex="1" />
+            <CheckBox fx:id="chkAdultOver" mnemonicParsing="false" selected="true" text="Over-Production" GridPane.rowIndex="2" />
+            <CheckBox fx:id="chkAdultMixing" mnemonicParsing="false" text="Mixing" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <GridPane GridPane.rowIndex="2">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Parent Selection" />
+            <CheckBox fx:id="chkFitProp" mnemonicParsing="false" selected="true" text="Fitness-Proportionate" GridPane.rowIndex="1" />
+            <CheckBox fx:id="chkSigma" mnemonicParsing="false" text="Sigma-Scaling" GridPane.rowIndex="2" />
+            <CheckBox fx:id="chkTurnament" mnemonicParsing="false" text="Turnament" GridPane.rowIndex="3" />
+            <CheckBox fx:id="chkMyOwn" mnemonicParsing="false" text="My own" GridPane.rowIndex="4" />
+         </children>
+      </GridPane>
+      <GridPane GridPane.columnIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="txtProbSize" text="40" GridPane.columnIndex="1" />
+            <Label text="Problem (genome) size" />
+         </children>
+      </GridPane>
    </children>
 </GridPane>
