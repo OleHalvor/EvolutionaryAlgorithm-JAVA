@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 public class Main extends Thread{
@@ -12,17 +11,17 @@ public class Main extends Thread{
 
     //Params:
     static int genome_length   = 40;
-    static int num_children    = 100;
+    static int num_children    = 200;
     static int num_parents     = 100;
     static int percentage_best = 50;
-    static int generations     = 10000;
+    static int generations     = 1000;
     static int mutation_rate   = 1;
     static int last_fitness    = 0;
 
     //Problem specific
     static int adult_selection = 1; //0:full, 1:over-production, 2:mixing
     static int problem = 1; //0:OneMax, 1:LOLZ, 2:Surprising sequences
-    static int parent_selection = 0; //0: fitness-proportionate, 1:sigma-scaling, 2:turnament-selection, 3:Min
+    static int parent_selection = 0; //0: fitness-proportionate, 1:sigma-scaling, 2:tournament-selection, 3:Min
 
 
 
@@ -197,6 +196,7 @@ public class Main extends Thread{
         System.out.println(adults.size()+" Kom inn");
         Random rnd = new Random();
         if (parent_selection==0){
+            //FITNESS PROP
             ArrayList<Individual> individuals = new ArrayList<>();
             double total_fitness = 0;
             for (Genome g:adults){
@@ -269,6 +269,33 @@ public class Main extends Thread{
 
         }
         if (parent_selection==2){
+            //Tournament
+            int group_count = 10;
+            int parents_per_division = num_parents/group_count;
+            int children_per_division = num_children/group_count;
+            ArrayList<ArrayList<Genome>> divisions =new ArrayList<>();
+            for (int i=0; i<group_count; i++) divisions.add(new ArrayList<Genome>());
+            for (int i=0; i<adults.size(); i++){
+                int div = i%group_count;
+                divisions.get(div).add(adults.get(i));
+            }
+            ArrayList<Genome> winners = new ArrayList<>();
+
+            for (ArrayList<Genome> division :divisions){
+                ArrayList<Genome> sorted_division = sort_genomes(division);
+
+                int best_count = (parents_per_division * percentage_best) / 100;
+                int worst_count = children_per_division - best_count;
+
+                ArrayList<Genome> best_adults = new ArrayList<>(sorted_division.subList((sorted_division.size() - best_count), sorted_division.size()));
+                ArrayList<Genome> worst_adults = new ArrayList<>(sorted_division.subList(0, (sorted_division.size() - best_count)));
+
+                for (int i = 0; i < (worst_count); i++) {
+                    winners.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+                }
+                for (Genome g:best_adults) winners.add(g);
+            }
+            return winners;
 
         }
 

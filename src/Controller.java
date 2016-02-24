@@ -43,15 +43,9 @@ public class Controller {
 
     @FXML
     private void initialize() {
-        Main main = new Main();
         btnStart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                try {
-                    main.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 Main main = new Main();
                 main.setGenome_length(Integer.parseInt(txtProbSize.getText()));
                 main.start();
