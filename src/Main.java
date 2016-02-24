@@ -15,9 +15,14 @@ public class Main {
     static int num_children    = 100;
     static int num_parents     = 100;
     static int percentage_best = 50;
-    static int generations     = 1000;
+    static int generations     = 10000;
     static int mutation_rate   = 1;
-    static int last_fitness     = 0;
+    static int last_fitness    = 0;
+
+    //Problem specific
+    static int adult_selection = 1; //0:full, 1:over-production, 2:mixing
+    static int problem = 0; //0:OneMax, 1:LOLZ, 2:Surprising sequences
+    static int parent_selection = 0; //0: fitness-proportionate, 1:sigma-scaling, 2:turnament-selection, 3:Min
 
     public static int get_mutation_rate(){
         return mutation_rate;
@@ -146,32 +151,103 @@ public class Main {
     }
 
     private static ArrayList<Genome> select_adults(ArrayList<Genome> children){
-        return children;
+        Random rnd = new Random();
+        if (adult_selection==0)
+            return children;
+        if (adult_selection==1){
+            ArrayList<Genome> sorted_adults = sort_genomes(children);
+            int best_count = (num_parents * percentage_best) / 100;
+            int worst_count = num_children - best_count;
+            ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size() - best_count), sorted_adults.size()));
+            ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0, (sorted_adults.size() - best_count)));
+            ArrayList<Genome> selected_adults = new ArrayList<>(best_adults);
+            for (int i = 0; i < (worst_count); i++) {
+                selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+            }
+            if (parent_genomes.size() >= 2) {
+                ArrayList<Genome> sorted_parents = sort_genomes(parent_genomes);
+                selected_adults.add(sorted_parents.get(sorted_parents.size() - 1));
+                selected_adults.add(sorted_parents.get(sorted_parents.size() - 2));
+                selected_adults.add(sorted_parents.get(0));
+                selected_adults.add(sorted_parents.get(1));
+            }
+            return selected_adults;
+        }
+        if (adult_selection==2){
+            ArrayList<Genome> temp = new ArrayList<>(children);
+            for (Genome g:adult_genomes)temp.add(g);
+            return temp;
+        }
+        else return children;
     }
 
     private static ArrayList<Genome> select_parents(ArrayList<Genome> adults){
-        int best_count = (num_parents*percentage_best)/100;
-        int worst_count = num_children-best_count;
-        Random rnd = new Random();
         ArrayList<Genome> sorted_adults = sort_genomes(adults);
+        System.out.println(adults.size()+" Kom inn");
+        Random rnd = new Random();
+        if (parent_selection==0){
+            ArrayList<Individual> individuals = new ArrayList<>();
+            double total_fitness = 0;
+            for (Genome g:adults){
+                int fit = Fitness.eval_fitness(g);
+                individuals.add(new Individual(g,fit ));
+                total_fitness += fit;
+            }
+            double last_value = 0;
+            for (Individual i:individuals){
+                i.setPropFitStart(last_value);
+                i.setPropFit((i.getFitness()/total_fitness)+last_value);
+                last_value = (i.getFitness()/total_fitness)+last_value;
 
+            }
+            ArrayList<Genome> winners = new ArrayList<>();
 
-        ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size()-best_count),sorted_adults.size()));
-        ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0,(sorted_adults.size()-best_count)));
+            for (int i=0; i<num_parents; i++){
+                double rnd_num = rnd.nextDouble();
+                for (Individual k:individuals){
+                    if ((rnd_num>k.getPropFitStart())&&(rnd_num<k.getPropFit())){
+                        if (!winners.contains(k.genome))winners.add(k.getGenome());
+                    }
+                }
+            }
+            if (parent_genomes.size() >= 2) {
+                ArrayList<Genome> sorted_parents = sort_genomes(parent_genomes);
+                winners.add(sorted_parents.get(sorted_parents.size() - 1));
+                winners.add(sorted_parents.get(sorted_parents.size() - 2));
+                winners.add(sorted_parents.get(0));
+                winners.add(sorted_parents.get(1));
+            }
+            System.out.println(winners.size()+" gikk ut");
+            return winners;
 
-        ArrayList<Genome> selected_adults = new ArrayList<>(best_adults);
-
-        for (int i=0; i<(worst_count); i++){
-            selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
         }
-        if (parent_genomes.size()>=1) {
-            ArrayList<Genome> sorted_parents = sort_genomes(parent_genomes);
-            selected_adults.add(sorted_parents.get(sorted_parents.size() - 1));
-            selected_adults.add(sorted_parents.get(sorted_parents.size() - 2));
-            selected_adults.add(sorted_parents.get(0));
-            selected_adults.add(sorted_parents.get(1));
+        if (parent_selection==1){
+
         }
-        return selected_adults;
+        if (parent_selection==2){
+
+        }
+
+
+        if(parent_selection==3) {
+            int best_count = (num_parents * percentage_best) / 100;
+            int worst_count = num_children - best_count;
+            ArrayList<Genome> best_adults = new ArrayList<>(sorted_adults.subList((sorted_adults.size() - best_count), sorted_adults.size()));
+            ArrayList<Genome> worst_adults = new ArrayList<>(sorted_adults.subList(0, (sorted_adults.size() - best_count)));
+            ArrayList<Genome> selected_adults = new ArrayList<>(best_adults);
+            for (int i = 0; i < (worst_count); i++) {
+                selected_adults.add(worst_adults.get(rnd.nextInt(worst_adults.size())));
+            }
+            if (parent_genomes.size() >= 2) {
+                ArrayList<Genome> sorted_parents = sort_genomes(parent_genomes);
+                selected_adults.add(sorted_parents.get(sorted_parents.size() - 1));
+                selected_adults.add(sorted_parents.get(sorted_parents.size() - 2));
+                selected_adults.add(sorted_parents.get(0));
+                selected_adults.add(sorted_parents.get(1));
+            }
+            return selected_adults;
+        }
+        return adults;
     }
 
     private static ArrayList<Genome> generate_children(int size){

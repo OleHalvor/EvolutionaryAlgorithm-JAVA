@@ -7,9 +7,10 @@ public class Fitness {
     // ONE-MAX
 
 
-    static int problem =1;
+
 
     static public int eval_fitness(Genome g){
+        int problem = Main.problem;
         if (problem==0){
             int score = 0;
             int[] dna = g.getDna();
@@ -39,6 +40,13 @@ public class Fitness {
             return score;
         }
         else if (problem==2){
+            int l = g.getDna().length;
+            for (int i=0; i<l-1; i++){
+                for (int k=i+1; k<l; k++ ){
+
+                }
+            }
+
 
         }
         return -1;
