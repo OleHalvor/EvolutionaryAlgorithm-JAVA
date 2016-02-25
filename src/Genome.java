@@ -34,7 +34,7 @@ public class Genome {
         for (int i=0; i<dna0.length; i++){
             int rand0 = rnd.nextInt(10000);
             double mut_rate = Main.get_mutation_rate();
-            if (mut_rate!=0)mut_rate=mut_rate/3;
+            if (mut_rate!=0)mut_rate=mut_rate/10;
             if (rand0 >= 9998/mut_rate){
                 new_dna[i]=rnd.nextInt(2);
             }

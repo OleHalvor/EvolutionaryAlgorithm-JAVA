@@ -3,13 +3,13 @@
  */
 public class Phenome {
 
-    int dna;
+    double dna;
 
-    public Phenome(int dna){
+    public Phenome(double dna){
         this.dna = dna;
     }
 
-    public int getDna(){
+    public double getDna(){
         return dna;
     }
 }

@@ -9,10 +9,10 @@ public class Fitness {
 
 
 
-    static public int eval_fitness(Genome g){
+    static public double eval_fitness(Genome g){
         int problem = Main.problem;
         if (problem==0){
-            int score = 0;
+            double score = 0;
             int[] dna = g.getDna();
             for (int i=0; i<dna.length; i++){
                 if (dna[i]==1) score+=1;
@@ -21,13 +21,14 @@ public class Fitness {
         }
         else if (problem==1) {
             int zero_cap = 21;
-            int score = 0;
+            double score = 0;
             int[] dna = g.getDna();
             int last = dna[0];
             int target = dna[0];
             for (int i = 0; i < dna.length; i++) {
                 if (dna[i] == last) {
-                    score += 1;
+                    if (dna[i]==1) score+=1;
+                    else score += 0.7;
                     last = dna[i];
                 } else {
                     break;
