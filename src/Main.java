@@ -11,16 +11,21 @@ public class Main extends Thread{
 
     //Params:
     static int genome_length   = 40;
-    static int num_children    = 1000;
+    static int num_children    = 500;
     static int num_parents     = 100;
     static int percentage_best = 50;
     static int generations     = 100;
     static int mutation_rate   = 1;
     static double last_fitness = 0;
+    static int[] target_string = {1,1,0,1,0,0,1,1,1,1,0,1,0,0,1,0,0,1,1,1,0,1,1,0,1,0,1,1,0,0,0,0,1,0,0,1,0,1,1,1};
+
+    public int[] getTarget_string(){
+        return target_string;
+    }
 
     //Problem specific
-    static int adult_selection = 0; //0:full, 1:over-production, 2:mixing
-    static int problem = 0; //0:OneMax, 1:LOLZ, 2:Surprising sequences
+    static int adult_selection = 1; //0:full, 1:over-production, 2:mixing
+    static int problem = 1; //0:OneMax, 1:LOLZ, 2:Surprising sequences
     static int parent_selection = 0; //0: fitness-proportionate, 1:sigma-scaling, 2:tournament-selection, 3:Min
     static int c = 1;
 

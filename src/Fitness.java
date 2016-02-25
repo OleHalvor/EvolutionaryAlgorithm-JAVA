@@ -10,12 +10,14 @@ public class Fitness {
 
 
     static public double eval_fitness(Genome g){
+        int[] target_string = Main.target_string;
         int problem = Main.problem;
         if (problem==0){
             double score = 0;
             int[] dna = g.getDna();
             for (int i=0; i<dna.length; i++){
                 if (dna[i]==1) score+=1;
+                //if (dna[i]==target_string[i]) score+=1;
             }
             return score;
         }
@@ -28,7 +30,7 @@ public class Fitness {
             for (int i = 0; i < dna.length; i++) {
                 if (dna[i] == last) {
                     if (dna[i]==1) score+=1;
-                    else score += 0.7;
+                    else score += 1;
                     last = dna[i];
                 } else {
                     break;
