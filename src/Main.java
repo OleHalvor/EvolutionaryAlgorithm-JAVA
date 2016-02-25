@@ -12,7 +12,7 @@ public class Main extends Thread{
     //Params:
     static int genome_length   = 40;
     static int num_children    = 500;
-    static int num_parents     = 100;
+    static int num_parents     = 250;
     static int percentage_best = 50;
     static int generations     = 100;
     static int mutation_rate   = 1;
@@ -38,6 +38,11 @@ public class Main extends Thread{
         main(null);
     }
     public static void main(String[] args) {
+        if (adult_selection!=1)if(num_children>=100)num_children=100;
+        if (adult_selection!=1)if(num_parents>=100)num_parents=80;
+        if ((adult_selection==0)&&(problem==1))if(num_parents>=200)num_parents=200;
+        if ((adult_selection==1)&&(problem==1)&&(parent_selection==2))if(num_parents>=100)num_parents=120;
+        if ((adult_selection==1)&&(problem==1)&&(parent_selection==2))if(num_children>=100)num_children=120;
         System.out.println("  ");
         System.out.println("-----------Starting--------------");
 
@@ -111,6 +116,7 @@ public class Main extends Thread{
             max_genome = g;
         }
         best_genome = max_genome;
+        System.out.println("Best genome: "+Genome.printDna(best_genome));
         System.out.println(c+","+(int)max);
 
         int tot =0;
@@ -312,13 +318,6 @@ public class Main extends Thread{
 
     }
 
-    private static ArrayList<Phenome> convert_genomes(ArrayList<Genome> genomes){
-        ArrayList<Phenome> phenomes = new ArrayList<Phenome>();
-        for (Genome g:genomes){
-            phenomes.add(new Phenome(Fitness.eval_fitness(g)));
-        }
-        return phenomes;
-    }
 
     public static int getParent_selection() {
         return parent_selection;

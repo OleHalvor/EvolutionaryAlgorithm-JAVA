@@ -5,8 +5,9 @@ import java.util.ArrayList;
  */
 public class Genome_convertion {
 
-    public Phenome gen_to_phen(Genome g){
-        return new Phenome(Fitness.eval_fitness(g));
+    public void gen_to_phen(Genome g){
+        //return new Phenome(Fitness.eval_fitness(g));
+
     }
 
     public static ArrayList<Genome> translate(ArrayList<Genome> g){
